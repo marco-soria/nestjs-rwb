@@ -4,9 +4,10 @@ import { AppService } from '@app/app.service';
 
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { TagsModule } from '@app/tags/tags.module';
-import { EnvModule } from './env/env.module';
-import { DatabaseModule } from './database/database.module';
+
+import { EnvModule } from '@app/env/env.module';
+import { DatabaseModule } from '@app/database/database.module';
+import { TagsModule } from '@app/domain/tags/tags.module';
 
 @Module({
   imports: [TagsModule, EnvModule, DatabaseModule],
