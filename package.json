@@ -20,7 +20,7 @@
     "migration:drop": "pnpm run typeorm schema:drop",
     "migration:generate": "pnpm run typeorm migration:generate",
     "migration:run": "pnpm run typeorm migration:run",
-    "migration:seed": "pnpm run build && pnpm dlx typeorm -d src/database/seed-data-source.ts migration:run"
+    "migration:seed": "pnpm run build && pnpm dlx typeorm -d dist/database/data-seed-source.js migration:run"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",

@@ -10,7 +10,7 @@ import {
 import { hash } from 'bcrypt';
 import { ArticleEntity } from '@app/domain/articles/entities/article.entity';
 
-@Entity()
+@Entity('users')
 export class UserEntity {
   @PrimaryGeneratedColumn()
   id: number;
