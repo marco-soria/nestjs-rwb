@@ -1,34 +1,56 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+
+import { ProfileResponseInterface } from './types/profileResponse.interface';
 import { ProfilesService } from './profiles.service';
-import { CreateProfileDto } from './dto/create-profile.dto';
-import { UpdateProfileDto } from './dto/update-profile.dto';
+import { User } from '../users/decorators/user.decorator';
+import { AuthGuard } from '../users/guards/auth.guard';
 
 @Controller('profiles')
 export class ProfilesController {
   constructor(private readonly profilesService: ProfilesService) {}
 
-  @Post()
-  create(@Body() createProfileDto: CreateProfileDto) {
-    return this.profilesService.create(createProfileDto);
+  @Get(':username')
+  async getProfile(
+    @User('id') currentUserId: number,
+    @Param('username') profileUsername: string,
+  ): Promise<ProfileResponseInterface> {
+    const profile = await this.profilesService.getProfile(
+      currentUserId,
+      profileUsername,
+    );
+    return this.profilesService.buildProfileResponse(profile);
   }
 
-  @Get()
-  findAll() {
-    return this.profilesService.findAll();
+  @Post(':username/follow')
+  @UseGuards(AuthGuard)
+  async followProfile(
+    @User('id') currentUserId: number,
+    @Param('username') profileUsername: string,
+  ): Promise<ProfileResponseInterface> {
+    const profile = await this.profilesService.followProfile(
+      currentUserId,
+      profileUsername,
+    );
+    return this.profilesService.buildProfileResponse(profile);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.profilesService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProfileDto: UpdateProfileDto) {
-    return this.profilesService.update(+id, updateProfileDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.profilesService.remove(+id);
+  @Delete(':username/follow')
+  @UseGuards(AuthGuard)
+  async unfollowProfile(
+    @User('id') currentUserId: number,
+    @Param('username') profileUsername: string,
+  ): Promise<ProfileResponseInterface> {
+    const profile = await this.profilesService.unfollowProfile(
+      currentUserId,
+      profileUsername,
+    );
+    return this.profilesService.buildProfileResponse(profile);
   }
 }
